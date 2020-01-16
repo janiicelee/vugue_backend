@@ -121,3 +121,10 @@ class MyCalcTest(TestCase):
 
         response = client.get('/article/search/')
         self.assertEqual(response.status_code, 404)
+
+    def test_SearchError(self):
+        client = Client()
+
+        response = client.get('/article/search?')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {"message":"NO_KEYWORD"})
