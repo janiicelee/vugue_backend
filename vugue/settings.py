@@ -10,11 +10,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = my_settings.SECRET['secret']
+AWS_SECRET_KEY = my_settings.AWS_SECRET
+AWS_ACCESS_SECRET_KEY = my_settings.AWS_ACCESS_SECRET
+USER_EMAIL = my_settings.USER_EMAIL
+VOGUE_EMAIL = my_settings.VOGUE_EMAIL
+EMAIL_CREDENTIAL = my_settings.EMAIL_CREDENTIAL
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','10.58.5.67','10.58.5.67:8000']
 
 
 # Application definition

@@ -1,6 +1,8 @@
+import boto3
+
 from django.views import View
 from django.http  import JsonResponse
-
+from django.http  import HttpResponse
 from .models      import (
     Articles,
     ArticleDetails,
@@ -11,6 +13,17 @@ from .models      import (
 )
 
 from django.db.models import Q
+from datetime import datetime
+from vugue.settings         import AWS_SECRET_KEY
+from vugue.settings         import AWS_ACCESS_SECRET_KEY
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+from vugue.settings         import USER_EMAIL
+from vugue.settings         import VOGUE_EMAIL
+from vugue.settings         import EMAIL_CREDENTIAL
 
 class CategoryView(View):
     def get(self, request):
@@ -133,3 +146,72 @@ class VideoDetailView(View):
             return JsonResponse(data, safe = False, status = 200)
         except Video.DoesNotExist:
             return JsonResponse({'message':'ARTICLE_NOT_FOUND'}, status =404)
+
+class ImageView(View):
+
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=AWS_SECRET_KEY,
+        aws_secret_access_key=AWS_ACCESS_SECRET_KEY
+    )
+    S3_URL = 'https://s3-vugue-test.s3.ap-northeast-2.amazonaws.com/'
+    USER_ARTICLE_TAG = 15
+    def _send_email(self,title, img_src):
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "New Vogue korea news"
+        msg['From'] = VOGUE_EMAIL
+        msg['To'] = USER_EMAIL
+
+        html = '<html><body><h2>' + title + '</h2><img src=' + '"' + img_src + '"' + ">" + '</body></html>'
+        # print(html)
+        message = MIMEText(html, 'html')
+        msg.attach(message)
+        s = smtplib.SMTP_SSL('smtp.gmail.com')
+        s.login(VOGUE_EMAIL, EMAIL_CREDENTIAL)
+        s.sendmail(VOGUE_EMAIL, USER_EMAIL, msg.as_string())
+        s.quit()
+        # print("email sent")
+        return
+
+    def get(self, request):
+        offset = int(request.GET.get('offset',0))
+        limit  = int(request.GET.get('limit',12))
+        user_articles = CategoryTagArticles.objects.select_related('article','tag').filter(tag_id = self.USER_ARTICLE_TAG).order_by('id')[offset * limit: (offset+1) * limit]
+        user_list = [{
+                'title' : props.article.title,
+                'image_url' : props.article.image_url,
+                'detail_id' : props.article.article_detail_id,
+                'tag_id' : props.tag_id
+            } for props in user_articles]
+        return JsonResponse({'data':user_list}, status=200)
+
+    def post(self, request):
+        title = request.POST["title"]
+        file = request.FILES['filename']
+
+        self.s3_client.upload_fileobj(
+            file, 
+            "s3-vugue-test",
+            file.name,
+            ExtraArgs={
+                "ContentType": file.content_type
+            }
+        )
+        img_url = self.S3_URL + str(file)
+        self._send_email(title, img_url)
+
+        save_current = Articles.objects.count()
+        Articles.objects.create(
+            title = title,
+            image_url = img_url
+        )
+
+        save_current += 1
+        user_article = Articles.objects.get(id=save_current)
+        user_tag = Tags.objects.get(id=15)
+        CategoryTagArticles.objects.create(
+		    article = user_article,
+		    tag = user_tag
+		)
+
+        return HttpResponse(status= 200)

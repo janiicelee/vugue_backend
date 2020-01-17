@@ -3,10 +3,11 @@ from django.db import models
 class Articles(models.Model):
     title = models.CharField(max_length = 100)
     image_url = models.URLField(max_length = 2000)
-    created_date = models.DateTimeField(blank=True)
+    created_date = models.DateTimeField(blank=True, auto_now_add=True)
     caption_date = models.CharField(max_length = 50)
     caption = models.CharField(max_length = 300)
-    article_detail = models.OneToOneField('ArticleDetails', on_delete=models.CASCADE)
+    article_detail = models.OneToOneField('ArticleDetails', on_delete=models.CASCADE, null=True)
+    video_detail = models.OneToOneField('Video', on_delete=models.CASCADE, null=True)
 
     category = models.ManyToManyField('Categories', through ='CategoryTagArticles')
     tag = models.ManyToManyField('Tags', through ='CategoryTagArticles')

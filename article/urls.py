@@ -7,7 +7,8 @@ from .views      import (
     VideoDetailView,
     CategoryView,
     TagView,
-    MainView
+    MainView,
+    ImageView
 )
 
 urlpatterns = [
@@ -18,5 +19,7 @@ urlpatterns = [
     path('/details/<int:detail_id>', DetailView.as_view()),
     path('/main', MainView.as_view()),
     path('/video', VideoView.as_view()),
-    path('/video/<int:video_id>', VideoDetailView.as_view())
+    path('/video/<int:video_id>', VideoDetailView.as_view()),
+    path('/image', ImageView.as_view()),
+    path('/user', ImageView.as_view())
 ]

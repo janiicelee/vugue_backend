@@ -1,6 +1,7 @@
 import json
 import bcrypt
 import jwt
+import requests
 
 from vugue.settings         import SECRET_KEY
 from django.views           import View
@@ -23,7 +24,7 @@ class UserView(View):
 
             User(
                     name = data['name'],
-                    password = hashed_password.decode('utf-8')
+                    password = hashed_password.decode('utf-8'),
                 ).save()
 
             return JsonResponse({'message': 'SUCCESS'}, status = 200)
@@ -41,6 +42,7 @@ class AuthView(View):
 
         try:
             user = User.objects.get(name = data['name'])
+            print("user === ", end=""), print(user.name)
             if bcrypt.checkpw(data['password'].encode('utf-8'),user.password.encode('utf-8')):
                 access_token = jwt.encode({'id':user.id}, SECRET_KEY, algorithm = 'HS256')
                 return JsonResponse({'access_token': access_token.decode('utf-8')}, status=200)
@@ -58,11 +60,11 @@ class AuthView(View):
             return JsonResponse({'message':'WRONG_INPUT_VALUE'}, status=400)
 
 class KakaoSignInView(View):
-    def get(self, request):
+    def post(self, request):
         kakao_access_token = request.headers["Authorization"]
         headers            = {'Authorization':f"Bearer{kakao_access_token}"}
-        URL                = "http://kapi.kakao.com/v2/user/me"
-        response           = requests.get(URL, headers = headers)
+        URL                = "http://kapi.kakao.com/v1/user/me"
+        response           = requests.post(URL, headers = headers)
         kakao_user_info    = response.json()
 
         if User.objects.filter(social_id = kakao_user_info['id']).exists():
@@ -86,4 +88,3 @@ class KakaoSignInView(View):
             encoded_access_token = jwt.encode(payload, encryption_secret, algorithm = algorithm)
             
             return JsonResponse({'access_token':encoded_access_token.decode('utf-8')}, status = 200)
-
