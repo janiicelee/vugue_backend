@@ -62,29 +62,42 @@ class AuthView(View):
 class KakaoSignInView(View):
     def post(self, request):
         kakao_access_token = request.headers["Authorization"]
-        headers            = {'Authorization':f"Bearer{kakao_access_token}"}
-        URL                = "http://kapi.kakao.com/v1/user/me"
-        response           = requests.post(URL, headers = headers)
+
+        print(kakao_access_token)
+
+        headers            = {'Authorization' : f"Bearer {kakao_access_token}"}
+        URL                = "https://kapi.kakao.com/v2/user/me"
+        response           = requests.get(URL, headers = headers)
         kakao_user_info    = response.json()
 
-        if User.objects.filter(social_id = kakao_user_info['id']).exists():
-            user                 = User.objects.get(social_id = kakao_user_info['id'])
-            payload              = {"user_id":user.id}
-            encryption_secret    = SECRET_KEY
-            algorithm            ="HS256"
-            encoded_access_token = jwt.encode(payload, encryption_secret, algorithm = algorithm)
+        if User.objects.filter(kakao2 = kakao_user_info['id']).exists():
+            # user                 = User.objects.get(kakao2 = kakao_user_info['id'])
+            # payload              = {"user_id":user.id}
+            # encryption_secret    = SECRET_KEY
+            # algorithm            ="HS256"
+            # encoded_access_token = jwt.encode(payload, encryption_secret, algorithm = algorithm)
             
-            return JsonResponse({"access_token":encoded_access_token.decode("utf-8")}, status = 200)
-        
-        else:
-            User(
-                    social_platform_id = User.objects.get(platform = "kakao").id,
-                    social_id          = kakao_user_info['id'],
-                    ).save()
+            # return JsonResponse({"access_token":encoded_access_token.decode("utf-8")}, status = 200)
+            user = User.objects.get(kakao2 = kakao_user_info['id'])
+            access_token = jwt.encode({'user_id' : user.id}, SECRET_KEY, algorithm='HS256')
 
-            user                 = User.objects.get(social_id = kakao_user_info['id'])
-            payload              = {"user_id": user.id}
-            encryption_secret    = "HS256"
-            encoded_access_token = jwt.encode(payload, encryption_secret, algorithm = algorithm)
+            return JsonResponse({'access_token' : access_token.decode('utf-8'),}, status=200)
+        else:
+            # User(
+            #         social_platform_id = User.objects.get(platform = "kakao").id,
+            #         social_id          = kakao_user_info['id'],
+            #         ).save()
+
+            # user                 = User.objects.get(social_id = kakao_user_info['id'])
+            # payload              = {"user_id": user.id}
+            # encryption_secret    = "HS256"
+            # encoded_access_token = jwt.encode(payload, encryption_secret, algorithm = 'HS256')
             
-            return JsonResponse({'access_token':encoded_access_token.decode('utf-8')}, status = 200)
+            # return JsonResponse({'access_token':encoded_access_token.decode('utf-8')}, status = 200)
+            newUser = User.objects.create(
+                kakao2 = kakao_user_info['id'],
+                # nick_name = kakao_user_info['properties']['nickname']
+            )
+
+            access_token = jwt.encode({'id' : newUser.id}, SECRET_KEY, algorithm='HS256')
+            return JsonResponse({'access_token': access_token.decode('utf-8')}, status=200)

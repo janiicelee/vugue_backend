@@ -19,8 +19,8 @@ EMAIL_CREDENTIAL = my_settings.EMAIL_CREDENTIAL
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['*','13.209.16.32','13.209.16.32:8000']
 ALLOWED_HOSTS = ['*','10.58.5.67','10.58.5.67:8000']
-
 
 # Application definition
 
@@ -132,3 +132,8 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken',
     'x-requested-with',
 )
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+CSRF_COOKIE_SECURE = True
+MAX_UPLOAD_SIZE = 5242880

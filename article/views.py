@@ -125,9 +125,9 @@ class VideoView(View):
         limit  = int(request.GET.get('limit',12))
         videos = Video.objects.select_related('category').order_by('id')[offset * limit: (offset+1) * limit]
         data   = [{
-            'id'               : props.id,
             'title'            : props.title,
-            'background_image' : props.background_image,
+            'image_url'        : props.background_image,
+            'detail_id'        : props.id,
             } for props in videos]
         return JsonResponse(list(data), safe=False, status = 200)
 
