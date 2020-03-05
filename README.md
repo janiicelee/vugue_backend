@@ -9,6 +9,9 @@
 - RESTful API
 - AWS EC2, RDS
 
+# ERD
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/meekukin/WeSpace_backend/blob/master/vugue_erd.png"><img src="https://github.com/meekukin/WeSpace_backend/raw/master/vugue_erd.png" alt="vugue erd" style="max-width:100%;"></a>
+
 # Features
 - Sign-in / Sign-up API
 - Password Hashing using bcrypt
