@@ -8,6 +8,7 @@
 - Bcrypt, JWT
 - RESTful API
 - AWS EC2, RDS
+- AWS Docker
 
 # DB modeling
 <a target="_blank" rel="noopener noreferrer" href="https://github.com/meekukin/vugue_backend/blob/master/vugue_erd.png"><img src="https://github.com/meekukin/vugue_backend/raw/master/vugue_erd.png" alt="vugue erd" style="max-width:100%;"></a>
