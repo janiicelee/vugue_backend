@@ -21,3 +21,5 @@
 - Main page API
 - Category, Tag, Video Endpoints
 - Data modeling(RDBMS)
+- Unit test
+- AWS EC2, Docker
