@@ -1,6 +1,6 @@
 # Introduction
 - [Vogue Korea](http://www.vogue.co.kr/) website cloning.
-- Built in two weeks. (06-01-20 ~ 17-01-20)
+- Built in two weeks. (01/06/20 - 01/17/20)
 - [Front-end](https://github.com/wecode-bootcamp-korea/Vugue_frontend) git
 
 # Built with
