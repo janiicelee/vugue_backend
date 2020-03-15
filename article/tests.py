@@ -11,7 +11,7 @@ class MyCalcTest(TestCase):
     def setUp(self):
         client = Client()
 
-        Categories.objects.create(
+        Category.objects.create(
             id =1,
             name = 'fashion'
         )
@@ -21,40 +21,40 @@ class MyCalcTest(TestCase):
             name = 'beauty'
         )
 
-        Categories.objects.create(
+        Category.objects.create(
             id =3,
             name = 'living'
         )
 
-        Tags.objects.create(
+        Tag.objects.create(
             id =1,
             name = 'trend'
         )
-        Tags.objects.create(
+        Tag.objects.create(
             id =2,
             name = 'shopping'
         )
 
-        Tags.objects.create(
+        Tag.objects.create(
             id =12,
             name = 'ppl'
         )
 
-        ArticleDetails.objects.create(
+        ArticleDetail.objects.create(
             id = 1,
             title = 'WOMAN WITH A PLAN',
             caption_date = '2020.01.08',
             description = 'good'
         )
 
-        ArticleDetails.objects.create(
+        ArticleDetail.objects.create(
             id =2,
             title = 'RESHAPE THE FUTURE',
             caption_date = '2020.01.07',
             description = 'looks good'
         )
 
-        ArticleDetails.objects.create(
+        ArticleDetail.objects.create(
             id =3,
             title = 'BEAUTY NEW YEAR',
             caption_date = '2020.01.07',
@@ -63,57 +63,57 @@ class MyCalcTest(TestCase):
 
         t1 = datetime.datetime.strptime("2020-01-01 22:24:00", "%Y-%m-%d %H:%M:%S")
 
-        Articles.objects.create(
+        Article.objects.create(
             id =1,
             title = 'RESHAPE THE FUTURE',
             image_url = 'http://img.vogue.co.kr/vogue/2019/12/style_5dfc71ea05818-600x900.jpg',
             caption = 'Plan C’의 디자이너 카롤리나 카스틸리오니',
             created_date = datetime.datetime.strptime("2020-01-01 22:24:00", "%Y-%m-%d %H:%M:%S"),
-            article_detail = ArticleDetails.objects.get(id=1)
+            article_detail = ArticleDetail.objects.get(id=1)
         )
 
-        Articles.objects.create(
+        Article.objects.create(
             id =2,
             title = 'WOMAN WITH A PLAN',
             image_url = 'http://img.vogue.co.kr/vogue/2019/12/style_5dfc5cab87d49-600x900.jpg',
             caption = '2020년대 패션 생태계에서 가장 유효한 가치',
             created_date = datetime.datetime.strptime("2020-01-07 22:24:00", "%Y-%m-%d %H:%M:%S"),
-            article_detail = ArticleDetails.objects.get(id=2)
+            article_detail = ArticleDetail.objects.get(id=2)
         )
 
-        Articles.objects.create(
+        Article.objects.create(
             id =3,
             title = 'BEAUTY NEW YEAR',
             image_url = 'http://img.vogue.co.kr/vogue/2020/01/style_5e129975d71d0.jpg',
             caption = 'BEAUTY NEW YEAR',
             created_date = datetime.datetime.strptime("2020-01-07 22:24:00", "%Y-%m-%d %H:%M:%S"),
-            article_detail = ArticleDetails.objects.get(id=3)
+            article_detail = ArticleDetail.objects.get(id=3)
         )
 
-        CategoryTagArticles.objects.create(
-            article = Articles.objects.get(id=1),
-            category = Categories.objects.get(id=1),
-            tag = Tags.objects.get(id=1)
+        CategoryTagArticle.objects.create(
+            article = Article.objects.get(id=1),
+            category = Category.objects.get(id=1),
+            tag = Tag.objects.get(id=1)
         )
 
-        CategoryTagArticles.objects.create(
-            article = Articles.objects.get(id=2),
-            category = Categories.objects.get(id=2),
-            tag = Tags.objects.get(id=2)
+        CategoryTagArticle.objects.create(
+            article = Article.objects.get(id=2),
+            category = Category.objects.get(id=2),
+            tag = Tag.objects.get(id=2)
         )
 
-        CategoryTagArticles.objects.create(
-            article = Articles.objects.get(id=3),
-            category = Categories.objects.get(id=3),
-            tag = Tags.objects.get(id=12)
+        CategoryTagArticle.objects.create(
+            article = Article.objects.get(id=3),
+            category = Category.objects.get(id=3),
+            tag = Tag.objects.get(id=12)
         )
 
     def tearDown(self):
-        Categories.objects.all().delete()
-        Tags.objects.all().delete()
-        ArticleDetails.objects.all().delete()
-        Articles.objects.all().delete()
-        CategoryTagArticles.objects.all().delete()
+        Category.objects.all().delete()
+        Tag.objects.all().delete()
+        ArticleDetail.objects.all().delete()
+        Article.objects.all().delete()
+        CategoryTagArticle.objects.all().delete()
     
     def test_categoryview(self):
         client = Client()
@@ -226,7 +226,7 @@ class MyCalcTest(TestCase):
 class VideoTest(TestCase):
     client = Client()
     def setUp(self):
-        category = Categories.objects.create(
+        category = Category.objects.create(
             id   = 1,    
             name = 'Video',
         )
